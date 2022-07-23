@@ -87,6 +87,28 @@ class CustomModal {
     
     }
 
+    appendSingleSelectionInput(htmlString, name){
+        let optionsContainer = parser.parseFromString(htmlString, 'text/html').querySelector('div')
+        
+        let options = optionsContainer.querySelectorAll(`[data-group="${name}"]`)
+        for (let i of options){
+            i.addEventListener('click', () => {
+                this.inputValues[name] = i.getAttribute('data-value')
+                i.classList.add('selected')
+                for(let j of options){
+                    if(j !== i){
+                        j.classList.remove('selected')
+                    }
+                }
+            })
+        }
+
+        this.html.querySelector(`#${name}_input_container`).appendChild(optionsContainer)
+        this.html.querySelector(`#${name}_input_container`).appendChild(
+            parser.parseFromString(`<span class='hidden text-red-400' id="${name}_input_error">${name}</span>`, 'text/html').querySelector('span')
+        )
+    }
+
 
     addButtonEventListner(name, listner){
         let button = this.html.querySelector(`.${name}_button`)
@@ -144,11 +166,12 @@ const start = () => {
     
     let modalsArray = []
 
-    let inputs = ['username', 'password']
+    let inputs = ['username', 'password', 'moods']
     let modal1 = new CustomModal(`
         <div class = 'bg-gray-300 w-[600px] h-[600px]'>
-            <div id = 'username_input_container'></div>
-            <div id = 'password_input_container'></div>
+            <div id = '${inputs[0]}_input_container'></div>
+            <div id = '${inputs[1]}_input_container'></div>
+            <div id = '${inputs[2]}_input_container'></div>
             <div id = 'next_button_container'></div>
         </div>
         
@@ -158,39 +181,85 @@ const start = () => {
     modal1.appendInput(`<input type="password" placeholder="Enter your password" />`, inputs[1])
     modal1.appendButton(`<button class='bg-blue-400' px-5 py-4>NEXT</button>`, 'next')
 
+
+    modal1.appendSingleSelectionInput(`
+        <div class = 'p-4 flex flex-wrap'>
+            <div class = 'w-[25%] m-3 bg-white'>
+                <div data-value = 'happy' data-group='${inputs[2]}' class = 'color-blue-400'>
+                    Happy
+                </div>                
+            </div>
+            <div class = 'w-[25%] m-3 bg-white'>
+                <div data-value = 'sad' data-group='${inputs[2]}' class = 'color-blue-400'>
+                    Sad
+                </div>                
+            </div>
+            <div class = 'w-[25%] m-3 bg-white'>
+                <div data-value = 'angry' data-group='${inputs[2]}' class = 'color-blue-400'>
+                    Angry
+                </div>                
+            </div>
+            <div class = 'w-[25%] m-3 bg-white'>
+                <div data-value ='crying' data-group='${inputs[2]}' class = 'color-blue-400'>
+                    Crying
+                </div>                
+            </div>
+            <div class = 'w-[25%] m-3 bg-white'>
+                <div data-value = 'bad' data-group='${inputs[2]}' class = 'color-blue-400'>
+                   Bad 
+                </div>                
+            </div>
+            
+        </div>
+    `, inputs[2])
+
     let modal2 = new CustomModal(`
         <div class = 'bg-gray-300 w-[300px] h-[300px]'>
             <div id = 'next_button_container'></div>
         </div>
         
     `, [])
-
-
     modal2.appendButton(`<button class='bg-blue-400' px-5 py-4>NEXT</button>`, 'next')
 
 
+    let modal3 = new CustomModal(`
+        <div class = 'bg-blue-300 w-[500px] h-[500px]'>
+            <div id = 'next_button_container'></div>
+        </div>
+        
+    `, [])
 
-    displayNextModal = (prevModal, nextModal) => {
+
+   
+
+
+
+    displayNextModal = (prevModal, nextModal, modalStep) => {
         if(prevModal.saveInputsToLocalStorage()){
-            localStorage.setItem('modalStep', '2')
+            localStorage.setItem('modalStep', modalStep)
             prevModal.remove('opacity', 0.5, 0.5)
             nextModal.add('opacity', 1, 0.5)
         }
     }
-    
-    modal1.addButtonEventListner('next', () => displayNextModal(modal1, modal2))
 
 
     modalsArray.push(modal1)
     modalsArray.push(modal2)
+    modalsArray.push(modal3)
+
+    for(let i = 0; i < modalsArray.length - 1; i++){
+        modalsArray[i].addButtonEventListner('next', () => displayNextModal(modalsArray[i], modalsArray[i + 1], i+1))
+    }
 
     let modalStep = localStorage.getItem('modalStep')
     if(modalStep){
-        modalsArray[modalStep - 1].add('opacity', 1, 0)
+        modalsArray[modalStep].add('opacity', 1, 0)
     }
     else{
         modalsArray[0].add('opacity', 1, 0)
     }
+
+
 
 }
 
