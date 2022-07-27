@@ -35,5 +35,6 @@ body{
 }
 
 div.selected{
-    background-color: green;
+    background-color: #EBEEFE;
+    border: 2px solid #6D53E4;
 }
