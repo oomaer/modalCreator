@@ -11,33 +11,32 @@ class CustomModal {
     createInputsArray(){
         for(let input of this.inputs){
             if(input.type === 'multipleselect'){
-                this.inputValues[input.name] = []    
+                this.inputValues[input.id] = []    
             }
-            else this.inputValues[input.name] = ''
+            else this.inputValues[input.id] = ''
         }     
     }
 
-    appendInput(htmlString, name){
+    appendInput(htmlString, id){
         let input = parser.parseFromString(htmlString, 'text/html').querySelector('input')
-        input.classList.add(`${name}_input`)
+        input.classList.add(`${id}_input`)
         input.addEventListener('change', () => {
-            this.inputValues[name] = input.value
-            document.querySelector(`#${name}_input_error`).classList.add(`hidden`)
+            this.inputValues[id] = input.value
+            document.querySelector(`#${id}_input_error`).classList.add(`hidden`)
         })
-        this.html.querySelector(`#${name}_input_container`).appendChild(input)
+        this.html.querySelector(`#${id}_input_container`).appendChild(input)
        
     }
 
 
-    appendButton(htmlString, name, onClick){
-
+    appendButton(htmlString, id, onClick){
         let button = parser.parseFromString(htmlString, 'text/html').querySelector('button')
-        button.classList.add(`${name}_button`)
+        button.classList.add(`${id}_button`)
         if(onClick){
             input.addEventListener('click', onClick)
         }
-    
-        this.html.querySelector(`#${name}_button_container`).appendChild(button)
+
+        this.html.querySelector(`#${id}_button_container`).appendChild(button)
     
     }
 
@@ -92,8 +91,8 @@ class CustomModal {
     }
 
 
-    addButtonEventListner(name, listner){
-        let button = this.html.querySelector(`.${name}_button`)
+    addButtonEventListner(id, listner){
+        let button = this.html.querySelector(`.${id}_button`)
         button.addEventListener('click', listner)
     }
 
@@ -140,29 +139,27 @@ class CustomModal {
 }
 
 
-export const createModalTemplate = ({title, description, background, inputs, navigationButtons, closeButton}) => {
-
-    console.log(title)
+export const createModalTemplate = ({title, description, background, inputs = [], navigationButtons, closeButton}) => {
 
     let modal = new CustomModal(`
         <div class = 'bg-white w-full max-w-[676px] h-[100vh] md:h-[90vh] md:my-[5vh] p-4 sm:p-16 rounded-[8px] flex flex-col font-["Roboto"] fixed md:right-8 top-0' 
             style="box-shadow: 0px 4px 16px rgba(12, 17, 53, 0.05)">
-            ${background ? `<img src = '${background}' class = 'absolute top-[0px] left-[0px]' />` : ''}          
-            <div id = 'Close_button_container' class = 'w-full h-[32px] mb-10'></div>
+            ${background ? `<img src = '${background}' class = 'absolute top-[0px] left-[0px] ${background.class}' />` : ''}          
+            <div id = '${closeButton.id}_button_container' class = 'w-full h-[32px] mb-10'></div>
             <div class='flex flex-col'>
                 <div class = 'flex flex-col'>
-                    <h1 class='font-[500] text-[40px] mb-8'>${title}</h1>
+                    <div class='font-[500] text-[40px] mb-8'>${title}</div>
                     ${description ? `<p class='leading-[24px] mb-8'>${description}</p>`: ''}
                     <div>
-                        ${inputs.map(input => {
+                        ${inputs && inputs.map(input => {
                                 if(input.label){
-                                    return `<label for = '${input.name}_input_container' class = 'mb-2 block font-[500] tracking-[150%] text-[#0C1135] mb-2'>${input.label}</label>
-                                            <div class='hidden mb-2 bg-[#FCE9EE] border-[#EA638C] border-[1px] p-4 rounded-[8px]' id="${input.name}_input_error">${input.errorMessage ? input.errorMessage : input.name+' is required'}</div>
-                                            <div id='${input.name}_input_container' class='w-full ${input.containerClass && input.containerClass}'></div>`
+                                    return `<label for = '${input.id}_input_container' class = 'mb-2 block font-[500] tracking-[150%] text-[#0C1135] mb-2'>${input.label}</label>
+                                            <div class='hidden mb-2 bg-[#FCE9EE] border-[#EA638C] border-[1px] p-4 rounded-[8px]' id="${input.id}_input_error">${input.errorMessage ? input.errorMessage : input.name+' is required'}</div>
+                                            <div id='${input.id}_input_container' class='w-full ${input.containerClass && input.containerClass}'></div>`
                                 }
                                 else{
-                                    return `<div class='hidden mb-2 bg-[#FCE9EE] border-[#EA638C] border-[1px] p-4 rounded-[8px]' id="${input.name}_input_error">${input.errorMessage ? input.errorMessage : input.name+' is required'}</div>
-                                    <div id='${input.name}_input_container' class='w-full ${input.containerClass && input.containerClass}'></div>`
+                                    return `<div class='hidden mb-2 bg-[#FCE9EE] border-[#EA638C] border-[1px] p-4 rounded-[8px]' id="${input.id}_input_error">${input.errorMessage ? input.errorMessage : input.name+' is required'}</div>
+                                    <div id='${input.id}_input_container' class='w-full ${input.containerClass && input.containerClass}'></div>`
                                 }
                         }).join('')}
                     </div>
@@ -170,7 +167,7 @@ export const createModalTemplate = ({title, description, background, inputs, nav
             </div>
 
             <div class='flex gap-3 mt-auto'>
-                ${navigationButtons.map(button => `<div id=${button.name}_button_container></div>`).join('')}
+                ${navigationButtons.map(button => `<div id='${button.id}_button_container'></div>`).join('')}
             </div>
 
         </div>
@@ -186,29 +183,36 @@ export const createModalTemplate = ({title, description, background, inputs, nav
                     ${input.values ? input.values.map(value => {
                         if(value.image){
                             return `
-                            <div class = 'cursor-pointer p-3 border-[2px] border-[#ECE9FC] rounded-[8px] ${input.class && input.class}' data-group = '${input.name}' data-value = '${value.value}'>
+                            <div class = 'cursor-pointer p-3 border-[2px] border-[#ECE9FC] rounded-[8px] ${input.class && input.class}' data-group = '${input.id}' data-value = '${value.value}'>
                                 <img src = '${value.image}' class = ${value.imageClass ? value.imageClass : 'w-full h-full'} alt = ${value.name}/><span>${value.name}</span>
                             </div>`
                         }
-                        else return `<div class = 'cursor-pointer p-3 border-[2px] border-[#ECE9FC] rounded-[8px] ${input.class && input.class}' data-group = '${input.name}' data-value = '${value.value}'>${value.name}</div>`
+                        else return `<div class = 'cursor-pointer p-3 border-[2px] border-[#ECE9FC] rounded-[8px] ${input.class && input.class}' data-group = '${input.id}' data-value = '${value.value}'>${value.name}</div>`
                     }).join('') : ''}
-                `, input.name)
+                `, input.id)
                 break;
 
             case 'text':
-                modal.appendInput(`<input type="text" placeholder="Enter your name" />`, input.name)
+                modal.appendInput(`<input type="text" placeholder="Enter your name" />`, input.id)
                 break;
             case 'password':
-                modal.appendInput(`<input type="password" placeholder="Enter your password" />`, input.name)
+                modal.appendInput(`<input type="password" placeholder="Enter your password" />`, input.id)
                 break;
             case 'age':
-                modal.appendInput(`<input type="text" placeholder="Enter your Age" class = 'w-full mb-6 p-3 border-[1px] border-[#ECE9FC] rounded-[8px] ${input.class && input.class}'/>`, input.name)
+                modal.appendInput(`<input type="text" placeholder="Enter your Age" class = 'w-full mb-6 p-3 border-[1px] border-[#ECE9FC] rounded-[8px] ${input.class && input.class}'/>`, input.id)
                 break;
             case 'multipleselect':
                 modal.appendMultipleSelectionInput(`
-                        ${input.values ? input.values.map(value => `<div class = 'w-1/2 p-2' data-group = '${input.name}' data-value = '${value.value}'>${value.name}</div>`).join('') : ''}               
-                    
-                `, input.name)
+                    ${input.values ? input.values.map(value => {
+                        if(value.image){
+                            return `
+                            <div class = 'cursor-pointer p-3 border-[2px] border-[#ECE9FC] rounded-[8px] ${input.class && input.class}' data-group = '${input.id}' data-value = '${value.value}'>
+                                <img src = '${value.image}' class = ${value.imageClass ? value.imageClass : 'w-full h-full'} alt = ${value.name}/><span>${value.name}</span>
+                            </div>`
+                        }
+                        else return `<div class = 'cursor-pointer p-3 border-[2px] border-[#ECE9FC] rounded-[8px] ${input.class && input.class}' data-group = '${input.id}' data-value = '${value.value}'>${value.name}</div>`
+                    }).join('') : ''}
+                `, input.id)
                 break;
             
         }
@@ -217,15 +221,15 @@ export const createModalTemplate = ({title, description, background, inputs, nav
 
     navigationButtons.map(button => {
         if(button.type === 'type2'){
-            modal.appendButton(`<button class='px-8 py-4 rounded-[64px] text-[#6D53E4] bg-[#E2DDFA] font-[500] leading-4 tracking-[0.05em]'>${button.name}</button>`, button.name)
-            modal.addButtonEventListner(button.name, button.onClick ? button.onClick : () => {
+            modal.appendButton(`<button class='px-8 py-4 rounded-[64px] text-[#6D53E4] bg-[#E2DDFA] font-[500] leading-4 tracking-[0.05em]'>${button.name}</button>`, button.id)
+            modal.addButtonEventListner(button.id, button.onClick ? button.onClick : () => {
                 console.log('No Clicked')
             })
         }  
         else{
-            modal.appendButton(`<button class='px-8 py-4 rounded-[64px] text-white bg-[#6D53E4] font-[500] leading-4 tracking-[0.05em]'>${button.name}</button>`, button.name)
-            modal.addButtonEventListner(button.name, button.onClick ? button.onClick : () => {
-                console.log('YES CLicked')
+            modal.appendButton(`<button class='px-8 py-4 rounded-[64px] text-white bg-[#6D53E4] font-[500] leading-4 tracking-[0.05em]'>${button.name}</button>`, button.id)
+            modal.addButtonEventListner(button.id, button.onClick ? button.onClick : () => {
+                console.log(modal.inputValues)
             })
         }
 
@@ -244,8 +248,8 @@ export const createModalTemplate = ({title, description, background, inputs, nav
                 </defs>
             </svg>
         </button>
-    `, closeButton.name)
-    modal.addButtonEventListner(closeButton.name, closeButton.onClick ? closeButton.onClick : () => console.log('Close Clicked'))
+    `, closeButton.id)
+    modal.addButtonEventListner(closeButton.id, closeButton.onClick ? closeButton.onClick : () => console.log('Close Clicked'))
     
 
     return modal
@@ -263,7 +267,7 @@ export const createSimpleModalTemplate = (title, description, background, bottom
                 <h1 class='font-[500] text-[24px] leading-[133%] mb-4'>${title}</h1>
                 <p class='leading-[150%] mb-6'>${description}</p>
                 <div class='flex gap-3'>
-                    ${bottomButtons.map(button => `<div id=${button.name}_button_container></div>`).join('')}
+                    ${bottomButtons.map(button => `<div id=${button.id}_button_container></div>`).join('')}
                 </div>
             </div>
 
@@ -273,19 +277,13 @@ export const createSimpleModalTemplate = (title, description, background, bottom
 
 
     bottomButtons.map(button => {
-        if(button.type === 'YesButton'){
-            modal.appendButton(`<button class='px-8 py-4 rounded-[64px] text-white bg-[#6D53E4] font-[500] leading-4 tracking-[0.05em]'>${button.name}</button>`, button.name)
-            modal.addButtonEventListner(button.name, button.onClick ? button.onClick : () => {
-                console.log('YES CLicked')
-            })
-        }
-        else if(button.type === 'NoButton'){
-            modal.appendButton(`<button class='px-8 py-4 rounded-[64px] text-[#6D53E4] bg-[#E2DDFA] font-[500] leading-4 tracking-[0.05em]'>${button.name}</button>`, button.name)
-            modal.addButtonEventListner(button.name, button.onClick ? button.onClick : () => {
+         if(button.type === 'type2'){
+            modal.appendButton(`<button class='px-8 py-4 rounded-[64px] text-[#6D53E4] bg-[#E2DDFA] font-[500] leading-4 tracking-[0.05em]'>${button.name}</button>`, button.id)
+            modal.addButtonEventListner(button.id, button.onClick ? button.onClick : () => {
                 console.log('No Clicked')
             })
         }  
-        else if(button.type = 'CloseButton'){
+        else if(button.type === 'CloseButton'){
             modal.appendButton(`
                 <button>
                 <svg class = 'w-[16px] h-[16px] text-[#938FA8]' viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -299,13 +297,13 @@ export const createSimpleModalTemplate = (title, description, background, bottom
                     </defs>
                 </svg>
                 </button>
-            `, button.name)
-            modal.addButtonEventListner(button.name, button.onClick ? button.onClick : () => console.log('Close Clicked'))
+            `, button.id)
+            modal.addButtonEventListner(button.id, button.onClick ? button.onClick : () => console.log('Close Clicked'))
         }
         else{
-            modal.appendButton(`<button class='px-8 py-4 rounded-[64px] text-[#6D53E4] bg-[#E2DDFA] font-[500] leading-4 tracking-[0.05em]'>${button.name}</button>`, button.name)
-            modal.addButtonEventListner(button.name, button.onClick ? button.onClick : () => {
-                console.log('Other Button Clicked')
+            modal.appendButton(`<button class='px-8 py-4 rounded-[64px] text-white bg-[#6D53E4] font-[500] leading-4 tracking-[0.05em]'>${button.name}</button>`, button.id)
+            modal.addButtonEventListner(button.id, button.onClick ? button.onClick : () => {
+                console.log('YES CLicked')
             })
         }
     })
