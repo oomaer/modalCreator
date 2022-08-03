@@ -150,17 +150,6 @@ const start = () => {
 
 
     let modalsArray = []
-
-    const displayNextModal = (prevModal, nextModal, modalStep) => {
-        if(prevModal.saveInputsToLocalStorage()){
-            localStorage.setItem('modalStep', modalStep)
-            prevModal.remove('opacity', 0.5, 0.5)
-            nextModal.display('opacity', 1, 0.5)
-        }
-    }
-
-
-
     modalsArray.push(modal1)
     modalsArray.push(modal2)
     modalsArray.push(modal3)
@@ -168,11 +157,24 @@ const start = () => {
     modalsArray.push(modal5)
     modalsArray.push(modal6)
     modalsArray.push(modal7)
+    modalsArray[0].display()
 
-    modal1.display()
-    for(let i = 0; i < modalsArray.length - 1; i++){
-        modalsArray[i].addButtonEventListner('next', () => displayNextModal(modalsArray[i], modalsArray[i + 1], i+1))
+
+    let prevModalAnimations, nextModalAnimations;
+    const displayNextModal = ({prevModal, nextModal, prevModalAnimations, nextModalAnimations, removeDelay, displayDelay, modalStep}) => {
+        if(prevModal.saveInputsToLocalStorage()){
+            localStorage.setItem('modalStep', modalStep)
+            prevModal.remove(prevModalAnimations, removeDelay)
+            nextModal.display(nextModalAnimations, displayDelay)
+        }
     }
+
+    prevModalAnimations = [{type: 'scaleUp', duration: 0.3, delay: 0, class: 'container'}, {type: 'fadeOut', duration: 0.3, class: 'content'}]
+    nextModalAnimations = [{type: 'fadeIn', duration: 0.2, delay: 0, class: 'content'}]
+    modalsArray[0].addButtonEventListner('next', () => displayNextModal({prevModal: modalsArray[0], nextModal: modalsArray[1], prevModalAnimations, nextModalAnimations, modalStep: 1, removeDelay: 0.3, displayDelay: 0.3}))
+    
+
+
 
     // let modalStep = localStorage.getItem('modalStep')
     // if(modalStep){
@@ -183,16 +185,6 @@ const start = () => {
     // }
 
 
-
 }
 
 start()
-// document.querySelector('.clickme').addEventListener('click', () => {
-//     start()
-// })
-
-
-
-
-
-

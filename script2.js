@@ -99,11 +99,10 @@ class CustomModal {
     }
 
 
-    remove(animation, duration = 0.5, delay = 0){
-        this.html.style.animationDuration = `${duration}s`
-        if(animation === 'opacity'){
-            this.html.classList.add('remove_opacity')
-        }
+    remove(animations, delay = 0){
+        
+        this.applyAnimation(animations)
+    
         let timeOutId = setTimeout(() => {
             document.body.removeChild(this.html)
             clearTimeout(timeOutId)
@@ -111,15 +110,12 @@ class CustomModal {
 
     }
 
-    display(animation, duration = 0.5, delay = 0){
+    display(animations, delay = 0){
         this.updateModel()
-        this.html.style.animationDuration = `${duration}s`
-        if(animation === 'opacity'){
-            this.html.classList.add('opacity-0')
-            this.html.classList.add('add_opacity')
-        }
+        // this.applyAnimation(animations)
         let timeOutId = setTimeout(() => {
             document.body.appendChild(this.html)
+            this.applyAnimation(animations)
             clearTimeout(timeOutId)
         }, delay * 1000)
         
@@ -140,7 +136,7 @@ class CustomModal {
     }
 
     updateModel(){
-        console.log(this.updates)
+  
         if(this.updates.length > 0){
             for(let update of this.updates){
                 let updatedVal = localStorage.getItem(update.storageItemName)
@@ -168,6 +164,26 @@ class CustomModal {
             }
         }
     }
+
+
+    applyAnimation(animations){
+        for(let animation of animations){
+            let element = animation.class === 'container' ? this.html : this.html.querySelector(`.${animation.class}`)
+            element.style.transitionDuration = animation.duration + 's'
+            element.style.transitionDelay = animation.delay + 's'
+            element.style.animationDuration = animation.duration + 's'
+            element.style.animationDelay = animation.delay + 's'
+            if(animation.type === 'scaleUp'){
+                element.classList.add('scaleUp')
+            }
+            else if(animation.type === 'fadeOut'){
+                element.classList.add('fadeOut')    
+            }
+            else if(animation.type === 'fadeIn'){
+                element.classList.add('fadeIn') 
+            }
+        }
+    }
     
 }
 
@@ -175,11 +191,11 @@ class CustomModal {
 export const createModalTemplate = ({title={}, description={}, background, inputs = [], navigationButtons, closeButton, updates = []}) => {
 
     let modal = new CustomModal(`
-        <div class = 'bg-white w-full max-w-[676px] h-[100vh] md:h-[90vh] md:my-[5vh] p-4 sm:p-16 rounded-[8px] flex flex-col font-["Roboto"] fixed md:right-8 top-0' 
+        <div class = 'container bg-white w-full max-w-[676px] h-[100vh] md:h-[90vh] md:my-[5vh] p-4 sm:p-16 rounded-[8px] flex flex-col font-["Roboto"] fixed md:right-8 top-0' 
             style="box-shadow: 0px 4px 16px rgba(12, 17, 53, 0.05)">
             ${background ? `<img src = '${background}' class = 'absolute top-[0px] left-[0px] ${background.class}' />` : ''}          
             <div id = '${closeButton.id}_button_container' class = 'w-full h-[32px] mb-10'></div>
-            <div class='flex flex-col'>
+            <div class='flex flex-col content'>
                 <div class = 'flex flex-col'>
                     ${title.text ? `<h1 class='font-[500] text-[40px] mb-8 ${title.class}'>${title.text}</h1>`:''}
                     ${title.html ? `<div class='font-[500] text-[40px] mb-8 ${title.class}'>${title.html}</div>`: ''}
@@ -305,18 +321,19 @@ export const createModalTemplate = ({title={}, description={}, background, input
 export const createSimpleModalTemplate = ({title, description, background, navigationButtons}) => {
   
     let modal = new CustomModal(`
-        <div class = 'bg-white w-full max-w-[332px] h-[440px] p-8 rounded-[8px] flex font-["Roboto"] fixed right-8 bottom-8' 
+        <div class = 'container bg-white w-full h-full max-w-[332px] max-h-[440px] p-8 rounded-[8px] flex font-["Roboto"] fixed right-8 bottom-8' 
             style="box-shadow: 0px 4px 16px rgba(12, 17, 53, 0.05)">
-            ${background && `<img src = '${background}' class = 'absolute top-[0px] left-[0px]' />`}            
-            <div id = 'Close_button_container' class = 'absolute top-8 left-8'></div>
-            <div class='flex flex-col mt-auto'>
-                <h1 class='font-[500] text-[24px] leading-[133%] mb-4'>${title.text}</h1>
-                <p class='leading-[150%] mb-6'>${description.text}</p>
-                <div class='flex gap-3'>
-                    ${navigationButtons.map(button => `<div id=${button.id}_button_container></div>`).join('')}
+            <div class='content w-full h-full flex'>
+                ${background && `<img src = '${background}' class = 'absolute top-[0px] left-[0px]' />`}            
+                <div id = 'Close_button_container' class = 'absolute top-8 left-8'></div>
+                <div class='flex flex-col mt-auto'>
+                    <h1 class='font-[500] text-[24px] leading-[133%] mb-4'>${title.text}</h1>
+                    <p class='leading-[150%] mb-6'>${description.text}</p>
+                    <div class='flex gap-3'>
+                        ${navigationButtons.map(button => `<div id=${button.id}_button_container></div>`).join('')}
+                    </div>
                 </div>
             </div>
-
         </div>
     `, [], [])
 
@@ -325,9 +342,7 @@ export const createSimpleModalTemplate = ({title, description, background, navig
     navigationButtons.map(button => {
          if(button.type === 'type2'){
             modal.appendButton(`<button class='px-8 py-4 rounded-[64px] text-[#6D53E4] bg-[#E2DDFA] font-[500] leading-4 tracking-[0.05em]'>${button.name}</button>`, button.id)
-            modal.addButtonEventListner(button.id, button.onClick ? button.onClick : () => {
-                console.log('No Clicked')
-            })
+            
         }  
         else if(button.type === 'CloseButton'){
             modal.appendButton(`
@@ -344,13 +359,11 @@ export const createSimpleModalTemplate = ({title, description, background, navig
                 </svg>
                 </button>
             `, button.id)
-            modal.addButtonEventListner(button.id, button.onClick ? button.onClick : () => console.log('Close Clicked'))
+            
         }
         else{
             modal.appendButton(`<button class='px-8 py-4 rounded-[64px] text-white bg-[#6D53E4] font-[500] leading-4 tracking-[0.05em]'>${button.name}</button>`, button.id)
-            modal.addButtonEventListner(button.id, button.onClick ? button.onClick : () => {
-                console.log('YES CLicked')
-            })
+            
         }
     })
 

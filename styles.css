@@ -20,19 +20,40 @@ body{
     }
 }
 
-.add_opacity{
+/* @keyframes scaleUp{
+    from{
+        height: 100%;
+    }
+    to{
+        height: 90vh;
+    }
+
+} */
+
+.fadeIn{
     animation-name: opacityShow;
-  
     animation-timing-function: ease-in-out;
     animation-fill-mode: forwards;
 }
 
-.remove_opacity{
+.fadeOut{
     animation-name: opacityRemove;
     
     animation-timing-function: ease-in-out;
     animation-fill-mode: forwards;
 }
+
+
+
+.scaleUp{
+    transition: all ease-in-out;
+    max-width: 676px !important;
+    max-height: 90vh !important;
+}
+
+
+
+
 
 div.selected{
     background-color: #EBEEFE;
