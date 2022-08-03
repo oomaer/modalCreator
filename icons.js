@@ -688,3 +688,16 @@ export const icons = [
     `
 
 ]
+
+
+export const emojis = {
+    Pride: '😉',
+    Love: '😍',
+    Good: '🙂',
+    Happiness: '😃',
+    Shame: '😳',
+    Sad: '🙁',
+    Fear: '😨',
+    Anger: '😤',
+    Neutral: '😐',
+}

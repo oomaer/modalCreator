@@ -1,11 +1,13 @@
 var parser = new DOMParser();
+import { emojis } from "./icons.js";
 
 class CustomModal {
-    constructor(htmlString, inputs){
+    constructor(htmlString, inputs, updates){
         this.html = parser.parseFromString(htmlString, 'text/html').querySelector('div')
         this.inputs = inputs
         this.inputValues = {} 
         this.createInputsArray()
+        this.updates = updates
     }
 
     createInputsArray(){
@@ -110,6 +112,7 @@ class CustomModal {
     }
 
     display(animation, duration = 0.5, delay = 0){
+        this.updateModel()
         this.html.style.animationDuration = `${duration}s`
         if(animation === 'opacity'){
             this.html.classList.add('opacity-0')
@@ -123,23 +126,53 @@ class CustomModal {
     }
 
     saveInputsToLocalStorage(){
-        console.log(this.inputValues)
+
         for(let input of this.inputs){
-            let value = this.inputValues[input.name]
-            if(value === '' || value.length === 0){
+            let value = this.inputValues[input.id]
+            if(value === '' || (value.length && value.length === 0)){
                 document.querySelector(`#${input.name}_input_error`).classList.remove(`hidden`)
                 return false
             }
-            // localStorage.setItem(input.name, value)
-            console.log("saved: ", input.name, value)
+            localStorage.setItem(input.name, value)
+            // console.log("saved: ", input.name, value)
         }
         return true
+    }
+
+    updateModel(){
+        console.log(this.updates)
+        if(this.updates.length > 0){
+            for(let update of this.updates){
+                let updatedVal = localStorage.getItem(update.storageItemName)
+
+                if(updatedVal){
+                    
+                    let elements = this.html.querySelectorAll(`.${update.id}`)
+                    if(update.updateElementType === 'img'){
+                        for(let i of elements){
+                            i.src = updatedVal
+                        }
+                    }
+                    else if(update.updateElementType === 'emoji'){
+                        for(let i of elements){
+                           i.innerHTML = emojis[updatedVal]
+                        }
+                    }
+                    else{
+                        for(let i of elements){
+                            i.innerHTML = updatedVal
+                        }
+                    }
+
+                }
+            }
+        }
     }
     
 }
 
 
-export const createModalTemplate = ({title, description, background, inputs = [], navigationButtons, closeButton}) => {
+export const createModalTemplate = ({title={}, description={}, background, inputs = [], navigationButtons, closeButton, updates = []}) => {
 
     let modal = new CustomModal(`
         <div class = 'bg-white w-full max-w-[676px] h-[100vh] md:h-[90vh] md:my-[5vh] p-4 sm:p-16 rounded-[8px] flex flex-col font-["Roboto"] fixed md:right-8 top-0' 
@@ -148,8 +181,10 @@ export const createModalTemplate = ({title, description, background, inputs = []
             <div id = '${closeButton.id}_button_container' class = 'w-full h-[32px] mb-10'></div>
             <div class='flex flex-col'>
                 <div class = 'flex flex-col'>
-                    <div class='font-[500] text-[40px] mb-8'>${title}</div>
-                    ${description ? `<p class='leading-[24px] mb-8'>${description}</p>`: ''}
+                    ${title.text ? `<h1 class='font-[500] text-[40px] mb-8 ${title.class}'>${title.text}</h1>`:''}
+                    ${title.html ? `<div class='font-[500] text-[40px] mb-8 ${title.class}'>${title.html}</div>`: ''}
+                    ${description.text ? `<p class='leading-[24px] mb-8 ${description.class}'>${description.text}</p>`: ''}
+                    ${description.html ? `<div class='leading-[24px] mb-8 ${description.class}'>${description.html}</div>`: ''}
                     <div>
                         ${inputs && inputs.map(input => {
                                 if(input.label){
@@ -171,7 +206,7 @@ export const createModalTemplate = ({title, description, background, inputs = []
             </div>
 
         </div>
-    `, inputs)
+    `, inputs, updates)
 
 
 
@@ -184,10 +219,15 @@ export const createModalTemplate = ({title, description, background, inputs = []
                         if(value.image){
                             return `
                             <div class = 'cursor-pointer p-3 border-[2px] border-[#ECE9FC] rounded-[8px] ${input.class && input.class}' data-group = '${input.id}' data-value = '${value.value}'>
-                                <img src = '${value.image}' class = ${value.imageClass ? value.imageClass : 'w-full h-full'} alt = ${value.name}/><span>${value.name}</span>
+                                <img src = '${value.image}' class = ${value.imageClass ? value.imageClass : 'w-full h-full'} alt = ${value.name}/>
+                                <span>${value.name}</span>
+                                ${value.description ? `<p class = 'mt-1 text-[#0C1135]'>${value.description}</p>` : ''}
                             </div>`
                         }
-                        else return `<div class = 'cursor-pointer p-3 border-[2px] border-[#ECE9FC] rounded-[8px] ${input.class && input.class}' data-group = '${input.id}' data-value = '${value.value}'>${value.name}</div>`
+                        else return `<div class = 'cursor-pointer p-3 border-[2px] border-[#ECE9FC] rounded-[8px] ${input.class && input.class}' data-group = '${input.id}' data-value = '${value.value}'>
+                                        <span>${value.name}</span>
+                                        ${value.description ? `<p class = 'mt-1 text-[#0C1135]'>${value.description}</p>` : ''}
+                                    </div>`
                     }).join('') : ''}
                 `, input.id)
                 break;
@@ -207,10 +247,15 @@ export const createModalTemplate = ({title, description, background, inputs = []
                         if(value.image){
                             return `
                             <div class = 'cursor-pointer p-3 border-[2px] border-[#ECE9FC] rounded-[8px] ${input.class && input.class}' data-group = '${input.id}' data-value = '${value.value}'>
-                                <img src = '${value.image}' class = ${value.imageClass ? value.imageClass : 'w-full h-full'} alt = ${value.name}/><span>${value.name}</span>
+                                <img src = '${value.image}' class = ${value.imageClass ? value.imageClass : 'w-full h-full'} alt = ${value.name}/>
+                                <span>${value.name}</span>
+                                ${value.description ? `<p class = 'mt-1 text-[#0C1135]'>${value.description}</p>` : ''}
                             </div>`
                         }
-                        else return `<div class = 'cursor-pointer p-3 border-[2px] border-[#ECE9FC] rounded-[8px] ${input.class && input.class}' data-group = '${input.id}' data-value = '${value.value}'>${value.name}</div>`
+                        else return `<div class = 'cursor-pointer p-3 border-[2px] border-[#ECE9FC] rounded-[8px] ${input.class && input.class}' data-group = '${input.id}' data-value = '${value.value}'>
+                                        <span>${value.name}</span>
+                                        ${value.description ? `<p class = 'mt-1 text-[#0C1135]'>${value.description}</p>` : ''}
+                                    </div>`
                     }).join('') : ''}
                 `, input.id)
                 break;
@@ -257,26 +302,27 @@ export const createModalTemplate = ({title, description, background, inputs = []
 }
 
 
-export const createSimpleModalTemplate = (title, description, background, bottomButtons) => {
+export const createSimpleModalTemplate = ({title, description, background, navigationButtons}) => {
+  
     let modal = new CustomModal(`
         <div class = 'bg-white w-full max-w-[332px] h-[440px] p-8 rounded-[8px] flex font-["Roboto"] fixed right-8 bottom-8' 
             style="box-shadow: 0px 4px 16px rgba(12, 17, 53, 0.05)">
             ${background && `<img src = '${background}' class = 'absolute top-[0px] left-[0px]' />`}            
             <div id = 'Close_button_container' class = 'absolute top-8 left-8'></div>
             <div class='flex flex-col mt-auto'>
-                <h1 class='font-[500] text-[24px] leading-[133%] mb-4'>${title}</h1>
-                <p class='leading-[150%] mb-6'>${description}</p>
+                <h1 class='font-[500] text-[24px] leading-[133%] mb-4'>${title.text}</h1>
+                <p class='leading-[150%] mb-6'>${description.text}</p>
                 <div class='flex gap-3'>
-                    ${bottomButtons.map(button => `<div id=${button.id}_button_container></div>`).join('')}
+                    ${navigationButtons.map(button => `<div id=${button.id}_button_container></div>`).join('')}
                 </div>
             </div>
 
         </div>
-    `, [])
+    `, [], [])
 
 
 
-    bottomButtons.map(button => {
+    navigationButtons.map(button => {
          if(button.type === 'type2'){
             modal.appendButton(`<button class='px-8 py-4 rounded-[64px] text-[#6D53E4] bg-[#E2DDFA] font-[500] leading-4 tracking-[0.05em]'>${button.name}</button>`, button.id)
             modal.addButtonEventListner(button.id, button.onClick ? button.onClick : () => {
