@@ -130,7 +130,7 @@ class CustomModal {
         for(let input of this.inputs){
             let value = this.inputValues[input.id]
             if(value === '' || (value.length && value.length === 0)){
-                document.querySelector(`#${input.name}_input_error`).classList.remove(`hidden`)
+                document.querySelector(`#${input.id}_input_error`).classList.remove(`hidden`)
                 return false
             }
             localStorage.setItem(input.name, value)
