@@ -169,19 +169,32 @@ class CustomModal {
     applyAnimation(animations){
         for(let animation of animations){
             let element = animation.class === 'container' ? this.html : this.html.querySelector(`.${animation.class}`)
+            console.log(element)
+            console.log(this.html)
             element.style.transitionDuration = animation.duration + 's'
             element.style.transitionDelay = animation.delay + 's'
             element.style.animationDuration = animation.duration + 's'
             element.style.animationDelay = animation.delay + 's'
-            if(animation.type === 'scaleUp'){
-                element.classList.add('scaleUp')
-            }
-            else if(animation.type === 'fadeOut'){
-                element.classList.add('fadeOut')    
-            }
-            else if(animation.type === 'fadeIn'){
-                element.classList.add('fadeIn') 
-            }
+            element.classList.add(animation.type)
+            // if(animation.type === 'scaleUp'){
+            //     element.classList.add('scaleUp')
+            // }
+            // else if(animation.type === 'fadeOut'){
+            //     element.classList.add('fadeOut')    
+            // }
+            // else if(animation.type === 'fadeOutUp'){
+            //     element.classList.add('fadeInUp') 
+            // }
+            // else if(animation.type === 'fadeIn'){
+            //     element.classList.add('fadeIn') 
+            // }
+            // else if(animation.type === 'fadeInUp'){
+            //     element.classList.add('fadeInUp') 
+            // }
+            // else if(animation.type === 'fadeInDown'){
+            //     element.classList.add('fadeInUp') 
+            // }
+
         }
     }
     
@@ -197,11 +210,11 @@ export const createModalTemplate = ({title={}, description={}, background, input
             <div id = '${closeButton.id}_button_container' class = 'w-full h-[32px] mb-10'></div>
             <div class='flex flex-col content'>
                 <div class = 'flex flex-col'>
-                    ${title.text ? `<h1 class='font-[500] text-[40px] mb-8 ${title.class}'>${title.text}</h1>`:''}
-                    ${title.html ? `<div class='font-[500] text-[40px] mb-8 ${title.class}'>${title.html}</div>`: ''}
-                    ${description.text ? `<p class='leading-[24px] mb-8 ${description.class}'>${description.text}</p>`: ''}
-                    ${description.html ? `<div class='leading-[24px] mb-8 ${description.class}'>${description.html}</div>`: ''}
-                    <div>
+                    ${title.text ? `<h1 class='title font-[500] text-[40px] mb-8 ${title.class}'>${title.text}</h1>`:''}
+                    ${title.html ? `<div class='title font-[500] text-[40px] mb-8 ${title.class}'>${title.html}</div>`: ''}
+                    ${description.text ? `<p class='description leading-[24px] mb-8 ${description.class}'>${description.text}</p>`: ''}
+                    ${description.html ? `<div class='description leading-[24px] mb-8 ${description.class}'>${description.html}</div>`: ''}
+                    <div class = 'inputs'>
                         ${inputs && inputs.map(input => {
                                 if(input.label){
                                     return `<label for = '${input.id}_input_container' class = 'mb-2 block font-[500] tracking-[150%] text-[#0C1135] mb-2'>${input.label}</label>

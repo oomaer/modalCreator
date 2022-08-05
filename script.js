@@ -76,7 +76,7 @@ const start = () => {
 
 
     title = {html: `<div class='flex flex-col'><p class='text-[70px] sm:text-[96px] bg-[#F5F7FF] rounded-[50%] w-[80%]
-     max-w-[256px] aspect-square flex items-center justify-center mb-8 feeling_icon' ></p><p>Feeling "<span class = 'feeling_name'></span>"</p></div>`}
+     max-w-[256px] aspect-square flex items-center justify-center mb-8 feeling_icon' ></p><p class='subtitle'>Feeling "<span class = 'feeling_name'></span>"</p></div>`}
     description = 'You seem to be out of good study performance. Do want to quit or improve to better?'
     navigationButtons = [{name: 'Quit', id : 'quit', type: 'type2'}, {name: "Let's Improve", id: 'next', type: 'nextButton'}]
     closeButton = {name: 'Close', id:'close', type: 'closeButton', class : 'w-[32px] h-[32px]'}
@@ -157,10 +157,8 @@ const start = () => {
     modalsArray.push(modal5)
     modalsArray.push(modal6)
     modalsArray.push(modal7)
-    modalsArray[0].display()
 
 
-    let prevModalAnimations, nextModalAnimations;
     const displayNextModal = ({prevModal, nextModal, prevModalAnimations, nextModalAnimations, removeDelay, displayDelay, modalStep}) => {
         if(prevModal.saveInputsToLocalStorage()){
             localStorage.setItem('modalStep', modalStep)
@@ -169,12 +167,32 @@ const start = () => {
         }
     }
 
-    prevModalAnimations = [{type: 'scaleUp', duration: 0.3, delay: 0, class: 'container'}, {type: 'fadeOut', duration: 0.3, class: 'content'}]
-    nextModalAnimations = [{type: 'fadeIn', duration: 0.2, delay: 0, class: 'content'}]
+    let prevModalAnimations = [{type: 'scaleUp', duration: 0.3, delay: 0, class: 'container'}, {type: 'fadeOut', duration: 0.3, class: 'content'}]
+    let nextModalAnimations = [{type: 'fadeIn', duration: 0.2, delay: 0, class: 'content'}]
     modalsArray[0].addButtonEventListner('next', () => displayNextModal({prevModal: modalsArray[0], nextModal: modalsArray[1], prevModalAnimations, nextModalAnimations, modalStep: 1, removeDelay: 0.3, displayDelay: 0.3}))
     
+    let prevModalAnimations1 = [{type: 'fadeOut', duration: 0.3, delay: 0, class: 'content'}]
+    let nextModalAnimations1 = [{type: 'fadeInUp', duration: 0.3, class: 'inputs'}]
+    modalsArray[1].addButtonEventListner('next', () => displayNextModal({prevModal: modalsArray[1], nextModal: modalsArray[2], prevModalAnimations: prevModalAnimations1, nextModalAnimations: nextModalAnimations1, modalStep: 2, removeDelay: 0.3, displayDelay: 0.3}))
+
+    let prevModalAnimations2 = [{type: 'fadeOutDown', duration: 0.1, delay: 0, class: 'title'}]
+    let nextModalAnimations2 = [{type: 'slideDown', duration: 0.2, class: 'subtitle'}]
+    modalsArray[2].addButtonEventListner('next', () => displayNextModal({prevModal: modalsArray[2], nextModal: modalsArray[3], prevModalAnimations: prevModalAnimations2, nextModalAnimations: nextModalAnimations2, modalStep: 3, removeDelay: 0.1, displayDelay: 0.1}))
+
+    let prevModalAnimations3 = []
+    let nextModalAnimations3 = [{type: 'slideUpLong', duration: 0.2, class: 'title'}]
+    modalsArray[3].addButtonEventListner('next', () => displayNextModal({prevModal: modalsArray[3], nextModal: modalsArray[4], prevModalAnimations: prevModalAnimations3, nextModalAnimations: nextModalAnimations3, modalStep: 4, removeDelay: 0, displayDelay: 0}))
+
+    let prevModalAnimations4 = [{type: 'fadeOut', duration: 0.2, delay: 0, class: 'content'}]
+    let nextModalAnimations4 = [{type: 'fadeIn', duration: 0.2, delay: 0, class: 'content'}]
+    modalsArray[4].addButtonEventListner('next', () => displayNextModal({prevModal: modalsArray[4], nextModal: modalsArray[5], prevModalAnimations:prevModalAnimations4, nextModalAnimations:nextModalAnimations4, modalStep: 5, removeDelay: 0.2, displayDelay: 0.1}))
+
+    let prevModalAnimations5 = [{type: 'fadeOut', duration: 0.2, delay: 0, class: 'content'}]
+    let nextModalAnimations5 = [{type: 'fadeInUp', duration: 0.2, delay: 0, class: 'description'}]
+    modalsArray[5].addButtonEventListner('next', () => displayNextModal({prevModal: modalsArray[5], nextModal: modalsArray[6], prevModalAnimations:prevModalAnimations5, nextModalAnimations:nextModalAnimations5, modalStep: 5, removeDelay: 0.2, displayDelay: 0.1}))
 
 
+    modalsArray[5].display()
 
     // let modalStep = localStorage.getItem('modalStep')
     // if(modalStep){

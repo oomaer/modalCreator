@@ -11,12 +11,63 @@ body{
         opacity: 1;
     }
 }
+@keyframes opacityShowUp{
+    from{
+        transform: translateY(15px);
+        opacity: 0;
+    }
+    to{
+        transform: translateY(0px);
+        opacity: 1;
+    }
+}
+@keyframes opacityShowDownLarge{
+    from{
+        transform: translateY(-90px);
+        opacity: 0;
+    }
+    to{
+        transform: translateY(0px);
+        opacity: 1;
+    }
+}
+
 @keyframes opacityRemove{
     from{
         opacity: 1;
     }
     to{
         opacity: 0;
+    }
+}
+
+@keyframes opacityRemoveDown{
+    from{
+        transform: translateY(0);
+        opacity: 1;
+    }
+    to{
+        transform: translateY(50px);
+        opacity: 0;
+    }
+}
+
+
+@keyframes showDownLarge{
+    from{
+        transform: translateY(-120px);
+    }
+    to{
+        transform: translateY(0px);
+    }
+}
+
+@keyframes showUpLarge{
+    from{
+        transform: translateY(200px);
+    }
+    to{
+        transform: translateY(0px);
     }
 }
 
@@ -36,10 +87,39 @@ body{
     animation-fill-mode: forwards;
 }
 
-.fadeOut{
-    animation-name: opacityRemove;
-    
+.fadeInUp {
+    animation-name: opacityShowUp;
     animation-timing-function: ease-in-out;
+    animation-fill-mode: forwards;
+}
+.fadeInDown {
+    animation-name: opacityShowDownLarge;
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: forwards;
+}
+
+.fadeOut{
+    animation-name: opacityRemove;  
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: forwards;
+}
+
+.fadeOutDown{
+    animation-name: opacityRemoveDown; 
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+}
+
+
+.slideDown{
+    animation-name: showDownLarge;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+}
+
+.slideUpLong{
+    animation-name: showUpLarge;
+    animation-timing-function: linear;
     animation-fill-mode: forwards;
 }
 
@@ -50,7 +130,6 @@ body{
     max-width: 676px !important;
     max-height: 90vh !important;
 }
-
 
 
 
