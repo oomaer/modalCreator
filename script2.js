@@ -115,7 +115,7 @@ class CustomModal {
         // this.applyAnimation(animations)
         let timeOutId = setTimeout(() => {
             document.body.appendChild(this.html)
-            this.applyAnimation(animations)
+            this.applyAnimation(animations, delay)
             clearTimeout(timeOutId)
         }, delay * 1000)
         
@@ -168,14 +168,21 @@ class CustomModal {
 
     applyAnimation(animations){
         for(let animation of animations){
+            let duration = animation.duration ? animation.duration : 0
+            let delay = animation.delay ? animation.delay : 0
+            
             let element = animation.class === 'container' ? this.html : this.html.querySelector(`.${animation.class}`)
-            console.log(element)
-            console.log(this.html)
+
             element.style.transitionDuration = animation.duration + 's'
             element.style.transitionDelay = animation.delay + 's'
             element.style.animationDuration = animation.duration + 's'
             element.style.animationDelay = animation.delay + 's'
             element.classList.add(animation.type)
+
+            let timeOutId = setTimeout(() => {
+                element.classList.remove(animation.type)
+                clearTimeout(timeOutId)
+            }, ((duration + delay) * 1000) + 300)
             // if(animation.type === 'scaleUp'){
             //     element.classList.add('scaleUp')
             // }
@@ -230,8 +237,8 @@ export const createModalTemplate = ({title={}, description={}, background, input
                 </div>
             </div>
 
-            <div class='flex gap-3 mt-auto'>
-                ${navigationButtons.map(button => `<div id='${button.id}_button_container'></div>`).join('')}
+            <div class='flex mt-auto'>
+                ${navigationButtons.map(button => `<div id='${button.id}_button_container' class = 'mr-3'></div>`).join('')}
             </div>
 
         </div>
@@ -342,8 +349,8 @@ export const createSimpleModalTemplate = ({title, description, background, navig
                 <div class='flex flex-col mt-auto'>
                     <h1 class='font-[500] text-[24px] leading-[133%] mb-4'>${title.text}</h1>
                     <p class='leading-[150%] mb-6'>${description.text}</p>
-                    <div class='flex gap-3'>
-                        ${navigationButtons.map(button => `<div id=${button.id}_button_container></div>`).join('')}
+                    <div class='flex'>
+                        ${navigationButtons.map(button => `<div id='${button.id}_button_container' class='mr-3'></div>`).join('')}
                     </div>
                 </div>
             </div>

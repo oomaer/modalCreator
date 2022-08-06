@@ -140,7 +140,7 @@ const start = () => {
             containerClass: 'flex flex-col'
         }
     ]
-    navigationButtons = [{name: 'Back', id: 'back', type: 'type2'}, {name: 'Next', id: 'next', type: 'nextButton'}]
+    navigationButtons = [{name: 'Quit', id: 'quit', type: 'type2'}, {name: 'Continue', id: 'next', type: 'nextButton'}]
     closeButton = {name: 'Close', id: 'close', type: 'closeButton', class : 'w-[32px] h-[32px]'}
     let modal7 = createModalTemplate({title, description, inputs, navigationButtons, closeButton})
     // modal7.display('opacity', 0, 0)
@@ -168,19 +168,19 @@ const start = () => {
     }
 
     let prevModalAnimations = [{type: 'scaleUp', duration: 0.3, delay: 0, class: 'container'}, {type: 'fadeOut', duration: 0.3, class: 'content'}]
-    let nextModalAnimations = [{type: 'fadeIn', duration: 0.2, delay: 0, class: 'content'}]
+    let nextModalAnimations = [{type: 'fadeInUp', duration: 0.2, delay: 0, class: 'content'}]
     modalsArray[0].addButtonEventListner('next', () => displayNextModal({prevModal: modalsArray[0], nextModal: modalsArray[1], prevModalAnimations, nextModalAnimations, modalStep: 1, removeDelay: 0.3, displayDelay: 0.3}))
     
     let prevModalAnimations1 = [{type: 'fadeOut', duration: 0.3, delay: 0, class: 'content'}]
-    let nextModalAnimations1 = [{type: 'fadeInUp', duration: 0.3, class: 'inputs'}]
+    let nextModalAnimations1 = [{type: 'fadeInUp', duration: 0.3, delay: 0, class: 'inputs'}]
     modalsArray[1].addButtonEventListner('next', () => displayNextModal({prevModal: modalsArray[1], nextModal: modalsArray[2], prevModalAnimations: prevModalAnimations1, nextModalAnimations: nextModalAnimations1, modalStep: 2, removeDelay: 0.3, displayDelay: 0.3}))
 
-    let prevModalAnimations2 = [{type: 'fadeOutDown', duration: 0.1, delay: 0, class: 'title'}]
-    let nextModalAnimations2 = [{type: 'slideDown', duration: 0.2, class: 'subtitle'}]
+    let prevModalAnimations2 = [{type: 'fadeOutDownLarge', duration: 0.1, delay: 0, class: 'title'}]
+    let nextModalAnimations2 = [{type: 'slideDown', duration: 0.2, delay: 0, class: 'subtitle'}]
     modalsArray[2].addButtonEventListner('next', () => displayNextModal({prevModal: modalsArray[2], nextModal: modalsArray[3], prevModalAnimations: prevModalAnimations2, nextModalAnimations: nextModalAnimations2, modalStep: 3, removeDelay: 0.1, displayDelay: 0.1}))
 
     let prevModalAnimations3 = []
-    let nextModalAnimations3 = [{type: 'slideUpLong', duration: 0.2, class: 'title'}]
+    let nextModalAnimations3 = [{type: 'slideUpLong', duration: 0.2, delay: 0, class: 'title'}, {type: 'fadeIn', duration: 0.5, delay: 0, class: 'inputs'}]
     modalsArray[3].addButtonEventListner('next', () => displayNextModal({prevModal: modalsArray[3], nextModal: modalsArray[4], prevModalAnimations: prevModalAnimations3, nextModalAnimations: nextModalAnimations3, modalStep: 4, removeDelay: 0, displayDelay: 0}))
 
     let prevModalAnimations4 = [{type: 'fadeOut', duration: 0.2, delay: 0, class: 'content'}]
@@ -192,7 +192,33 @@ const start = () => {
     modalsArray[5].addButtonEventListner('next', () => displayNextModal({prevModal: modalsArray[5], nextModal: modalsArray[6], prevModalAnimations:prevModalAnimations5, nextModalAnimations:nextModalAnimations5, modalStep: 5, removeDelay: 0.2, displayDelay: 0.1}))
 
 
-    modalsArray[5].display()
+    
+    const displayPrevModal = ({prevModal, nextModal, prevModalAnimations, nextModalAnimations, removeDelay, displayDelay, modalStep}) => {
+            localStorage.setItem('modalStep', modalStep)
+            prevModal.remove(prevModalAnimations, removeDelay)
+            nextModal.display(nextModalAnimations, displayDelay)
+    }
+
+    //back button listeners
+    let prevModalAnimations6 = [{type: 'fadeOutDown', duration: 0.1, delay: 0, class: 'inputs'}]
+    let nextModalAnimations6 = [{type: 'fadeInDown', duration: 0.1, class: 'inputs'}]
+
+    modalsArray[2].addButtonEventListner('back', () => {
+        displayPrevModal({prevModal: modalsArray[2], nextModal: modalsArray[1], prevModalAnimations: prevModalAnimations6, nextModalAnimations: nextModalAnimations6, modalStep: 1, removeDelay: 0.1, displayDelay: 0.1})
+    })
+
+    let prevModalAnimations7 = [{type: 'fadeOut', duration: 0.1, delay: 0, class: 'inputs'}]
+    let nextModalAnimations7 = [{type: 'fadeInUp', duration: 0.1, class: 'inputs'}]
+    modalsArray[4].addButtonEventListner('back', () => {
+        displayPrevModal({prevModal: modalsArray[4], nextModal: modalsArray[2], prevModalAnimations: prevModalAnimations7, nextModalAnimations: nextModalAnimations7, modalStep: 2, removeDelay: 0.1, displayDelay: 0.1})
+    })
+
+
+
+    
+
+
+    modalsArray[2].display()
 
     // let modalStep = localStorage.getItem('modalStep')
     // if(modalStep){

@@ -32,6 +32,18 @@ body{
     }
 }
 
+@keyframes opacityShowDown{
+    from{
+        transform: translateY(-20px);
+        opacity: 0.5;
+    }
+    to{
+        transform: translateY(0px);
+        opacity: 1;
+    }
+}
+
+
 @keyframes opacityRemove{
     from{
         opacity: 1;
@@ -51,7 +63,6 @@ body{
         opacity: 0;
     }
 }
-
 
 @keyframes showDownLarge{
     from{
@@ -92,8 +103,14 @@ body{
     animation-timing-function: ease-in-out;
     animation-fill-mode: forwards;
 }
-.fadeInDown {
+.fadeInDownLarge {
     animation-name: opacityShowDownLarge;
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: forwards;
+}
+
+.fadeInDown{
+    animation-name: opacityShowDown;
     animation-timing-function: ease-in-out;
     animation-fill-mode: forwards;
 }
