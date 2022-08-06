@@ -214,20 +214,27 @@ const start = () => {
     })
 
 
+    const quitModal = (modal) => {
+        modal.remove()
+    }
+    //quit and close buttons listeners
+    for(let i = 0; i < modalsArray.length; i++){
+        modalsArray[i].addButtonEventListner('close', () => quitModal(modalsArray[i]))
+    }
 
+    modalsArray[0].addButtonEventListner('no', () => {quitModal(modalsArray[0])})
+    modalsArray[3].addButtonEventListner('quit', () => {quitModal(modalsArray[3])})
+    modalsArray[5].addButtonEventListner('quit', () => {quitModal(modalsArray[5])})
+    modalsArray[6].addButtonEventListner('quit', () => {quitModal(modalsArray[6])})
     
-
-
-    modalsArray[2].display()
-
-    // let modalStep = localStorage.getItem('modalStep')
-    // if(modalStep){
-    //     modalsArray[modalStep].add('opacity', 1, 0)
-    // }
-    // else{
-    //     modalsArray[0].add('opacity', 1, 0)
-    // }
-
+    // modalsArray[6].display()
+    let modalStep = localStorage.getItem('modalStep')
+    if(modalStep){
+        modalsArray[modalStep].display()
+    }
+    else{
+        modalsArray[0].display()
+    }
 
 }
 

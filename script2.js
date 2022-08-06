@@ -99,7 +99,7 @@ class CustomModal {
     }
 
 
-    remove(animations, delay = 0){
+    remove(animations = [], delay = 0){
         
         this.applyAnimation(animations)
     
@@ -110,7 +110,7 @@ class CustomModal {
 
     }
 
-    display(animations, delay = 0){
+    display(animations = [], delay = 0){
         this.updateModel()
         // this.applyAnimation(animations)
         let timeOutId = setTimeout(() => {
@@ -130,7 +130,7 @@ class CustomModal {
                 return false
             }
             localStorage.setItem(input.name, value)
-            // console.log("saved: ", input.name, value)
+          
         }
         return true
     }
@@ -170,7 +170,7 @@ class CustomModal {
         for(let animation of animations){
             let duration = animation.duration ? animation.duration : 0
             let delay = animation.delay ? animation.delay : 0
-            
+
             let element = animation.class === 'container' ? this.html : this.html.querySelector(`.${animation.class}`)
 
             element.style.transitionDuration = animation.duration + 's'
@@ -303,15 +303,11 @@ export const createModalTemplate = ({title={}, description={}, background, input
     navigationButtons.map(button => {
         if(button.type === 'type2'){
             modal.appendButton(`<button class='px-8 py-4 rounded-[64px] text-[#6D53E4] bg-[#E2DDFA] font-[500] leading-4 tracking-[0.05em]'>${button.name}</button>`, button.id)
-            modal.addButtonEventListner(button.id, button.onClick ? button.onClick : () => {
-                console.log('No Clicked')
-            })
+            
         }  
         else{
             modal.appendButton(`<button class='px-8 py-4 rounded-[64px] text-white bg-[#6D53E4] font-[500] leading-4 tracking-[0.05em]'>${button.name}</button>`, button.id)
-            modal.addButtonEventListner(button.id, button.onClick ? button.onClick : () => {
-                console.log(modal.inputValues)
-            })
+           
         }
 
     })
@@ -330,7 +326,6 @@ export const createModalTemplate = ({title={}, description={}, background, input
             </svg>
         </button>
     `, closeButton.id)
-    modal.addButtonEventListner(closeButton.id, closeButton.onClick ? closeButton.onClick : () => console.log('Close Clicked'))
     
 
     return modal
