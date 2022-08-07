@@ -701,3 +701,14 @@ export const emojis = {
     Anger: '😤',
     Neutral: '😐',
 }
+
+export const animalImages = {
+    'Rabbit': 'https://i.ibb.co/nsqkwKw/Animals.png', 
+    'Bear': 'https://i.ibb.co/CVLVHZk/Animals-1.png',
+    'Cat': 'https://i.ibb.co/VjL6Cj8/Animals-2.png',
+    'Dog': 'https://i.ibb.co/QFT4MVG/Animals-3.png',
+    'Deer': 'https://i.ibb.co/RYFVnDx/Animals-4.png',
+    'Elephant' : 'https://i.ibb.co/6JCz9pj/Animals-5.png',
+    'Fox' : 'https://i.ibb.co/jWK6DSk/Animals-6.png',
+    'Tiger': 'https://i.ibb.co/RTQx0X3/Animals-7.png'
+}

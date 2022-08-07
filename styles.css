@@ -64,9 +64,17 @@ body{
     }
 }
 
-@keyframes showDownLarge{
+@keyframes showDown{
     from{
         transform: translateY(-120px);
+    }
+    to{
+        transform: translateY(0px);
+    }
+}
+@keyframes showDownLarge{
+    from{
+        transform: translateY(-160px);
     }
     to{
         transform: translateY(0px);
@@ -129,6 +137,11 @@ body{
 
 
 .slideDown{
+    animation-name: showDown;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+}
+.slideDownLarge{
     animation-name: showDownLarge;
     animation-timing-function: linear;
     animation-fill-mode: forwards;

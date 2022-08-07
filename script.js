@@ -146,7 +146,15 @@ const start = () => {
     // modal7.display('opacity', 0, 0)
 
 
-
+    title = {html: `<div class='flex flex-col'><p class='text-[70px] sm:text-[96px] bg-[#F5F7FF] rounded-[50%] w-[80%]
+    max-w-[256px] aspect-square flex items-center justify-center mb-8'>
+        <img class = 'animal_image' />
+        <p class='subtitle'>Good luck with your studies!</p>
+    </div>`}
+   navigationButtons = [{name: 'Close', id : 'quit', type: 'type2'}]
+   closeButton = {name: 'Close', id:'close', type: 'closeButton', class : 'w-[32px] h-[32px]'}
+   updates = [{id: 'animal_image', storageItemName: 'animal', updateElementType: 'image'}]
+   let modal8 = createModalTemplate({title, description, navigationButtons, closeButton, updates})
 
 
     let modalsArray = []
@@ -157,6 +165,7 @@ const start = () => {
     modalsArray.push(modal5)
     modalsArray.push(modal6)
     modalsArray.push(modal7)
+    modalsArray.push(modal8)
 
 
     const displayNextModal = ({prevModal, nextModal, prevModalAnimations, nextModalAnimations, removeDelay, displayDelay, modalStep}) => {
@@ -191,6 +200,10 @@ const start = () => {
     let nextModalAnimations5 = [{type: 'fadeInUp', duration: 0.2, delay: 0, class: 'description'}]
     modalsArray[5].addButtonEventListner('next', () => displayNextModal({prevModal: modalsArray[5], nextModal: modalsArray[6], prevModalAnimations:prevModalAnimations5, nextModalAnimations:nextModalAnimations5, modalStep: 5, removeDelay: 0.2, displayDelay: 0.1}))
 
+    let prevModalAnimations6 = [{type: 'fadeOut', duration: 0.2, delay: 0, class: 'content'}]
+    let nextModalAnimations6 = [{type: 'slideDown', duration: 0.2, delay: 0, class: 'subtitle'}]
+    modalsArray[6].addButtonEventListner('next', () => displayNextModal({prevModal: modalsArray[6], nextModal: modalsArray[7], prevModalAnimations:prevModalAnimations6, nextModalAnimations:nextModalAnimations6, modalStep: 6, removeDelay: 0.2, displayDelay: 0.1}))
+
 
     
     const displayPrevModal = ({prevModal, nextModal, prevModalAnimations, nextModalAnimations, removeDelay, displayDelay, modalStep}) => {
@@ -200,15 +213,15 @@ const start = () => {
     }
 
     //back button listeners
-    let prevModalAnimations6 = [{type: 'fadeOutDown', duration: 0.1, delay: 0, class: 'inputs'}]
-    let nextModalAnimations6 = [{type: 'fadeInDown', duration: 0.1, class: 'inputs'}]
+    let prevModalAnimations7 = [{type: 'fadeOutDown', duration: 0.1, delay: 0, class: 'inputs'}]
+    let nextModalAnimations7 = [{type: 'fadeInDown', duration: 0.1, class: 'inputs'}]
 
     modalsArray[2].addButtonEventListner('back', () => {
         displayPrevModal({prevModal: modalsArray[2], nextModal: modalsArray[1], prevModalAnimations: prevModalAnimations6, nextModalAnimations: nextModalAnimations6, modalStep: 1, removeDelay: 0.1, displayDelay: 0.1})
     })
 
-    let prevModalAnimations7 = [{type: 'fadeOut', duration: 0.1, delay: 0, class: 'inputs'}]
-    let nextModalAnimations7 = [{type: 'fadeInUp', duration: 0.1, class: 'inputs'}]
+    let prevModalAnimations8 = [{type: 'fadeOut', duration: 0.1, delay: 0, class: 'inputs'}]
+    let nextModalAnimations8 = [{type: 'fadeInUp', duration: 0.1, class: 'inputs'}]
     modalsArray[4].addButtonEventListner('back', () => {
         displayPrevModal({prevModal: modalsArray[4], nextModal: modalsArray[2], prevModalAnimations: prevModalAnimations7, nextModalAnimations: nextModalAnimations7, modalStep: 2, removeDelay: 0.1, displayDelay: 0.1})
     })
@@ -226,8 +239,9 @@ const start = () => {
     modalsArray[3].addButtonEventListner('quit', () => {quitModal(modalsArray[3])})
     modalsArray[5].addButtonEventListner('quit', () => {quitModal(modalsArray[5])})
     modalsArray[6].addButtonEventListner('quit', () => {quitModal(modalsArray[6])})
+    modalsArray[7].addButtonEventListner('quit', () => {quitModal(modalsArray[7])})
     
-    // modalsArray[6].display()
+   
     let modalStep = localStorage.getItem('modalStep')
     if(modalStep){
         modalsArray[modalStep].display()
