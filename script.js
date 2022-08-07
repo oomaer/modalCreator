@@ -1,5 +1,5 @@
 
-import { createModalTemplate, createSimpleModalTemplate } from "./script2.js"
+import { createModalTemplate, createSimpleModalTemplate, createSimpleModalTemplate2 } from "./script2.js"
 
 /* 
 for every input we have a name
@@ -18,7 +18,7 @@ input name must be SAME in following
 
 const start = () => {
    
-    let title, description, inputs, background, navigationButtons, closeButton, updates;
+    let title, description, inputs, background, navigationButtons, closeButton, updates, imageSource;
     
     title = {text: 'Do you want to perform better at the exam?'}
     description = {text: 'Becoming aware of one´s feelings can lead to better performance in the studies.'}
@@ -151,10 +151,12 @@ const start = () => {
         <img class = 'animal_image' />
         <p class='subtitle'>Good luck with your studies!</p>
     </div>`}
-   navigationButtons = [{name: 'Close', id : 'quit', type: 'type2'}]
+    imageSource = './assets/imagefinal.png'
+    description = ''
+   navigationButtons = [{name: 'Close', id : 'quit', type: 'type1'}]
    closeButton = {name: 'Close', id:'close', type: 'closeButton', class : 'w-[32px] h-[32px]'}
    updates = [{id: 'animal_image', storageItemName: 'animal', updateElementType: 'image'}]
-   let modal8 = createModalTemplate({title, description, navigationButtons, closeButton, updates})
+   let modal8 = createSimpleModalTemplate2({title, description, navigationButtons, closeButton, updates, imageSource})
 
 
     let modalsArray = []
@@ -198,11 +200,11 @@ const start = () => {
 
     let prevModalAnimations5 = [{type: 'fadeOut', duration: 0.2, delay: 0, class: 'content'}]
     let nextModalAnimations5 = [{type: 'fadeInUp', duration: 0.2, delay: 0, class: 'description'}]
-    modalsArray[5].addButtonEventListner('next', () => displayNextModal({prevModal: modalsArray[5], nextModal: modalsArray[6], prevModalAnimations:prevModalAnimations5, nextModalAnimations:nextModalAnimations5, modalStep: 5, removeDelay: 0.2, displayDelay: 0.1}))
+    modalsArray[5].addButtonEventListner('next', () => displayNextModal({prevModal: modalsArray[5], nextModal: modalsArray[6], prevModalAnimations:prevModalAnimations5, nextModalAnimations:nextModalAnimations5, modalStep: 6, removeDelay: 0.2, displayDelay: 0.1}))
 
     let prevModalAnimations6 = [{type: 'fadeOut', duration: 0.2, delay: 0, class: 'content'}]
     let nextModalAnimations6 = [{type: 'slideDown', duration: 0.2, delay: 0, class: 'subtitle'}]
-    modalsArray[6].addButtonEventListner('next', () => displayNextModal({prevModal: modalsArray[6], nextModal: modalsArray[7], prevModalAnimations:prevModalAnimations6, nextModalAnimations:nextModalAnimations6, modalStep: 6, removeDelay: 0.2, displayDelay: 0.1}))
+    modalsArray[6].addButtonEventListner('next', () => displayNextModal({prevModal: modalsArray[6], nextModal: modalsArray[7], prevModalAnimations:prevModalAnimations6, nextModalAnimations:nextModalAnimations6, modalStep: 7, removeDelay: 0.2, displayDelay: 0.1}))
 
 
     
@@ -217,13 +219,13 @@ const start = () => {
     let nextModalAnimations7 = [{type: 'fadeInDown', duration: 0.1, class: 'inputs'}]
 
     modalsArray[2].addButtonEventListner('back', () => {
-        displayPrevModal({prevModal: modalsArray[2], nextModal: modalsArray[1], prevModalAnimations: prevModalAnimations6, nextModalAnimations: nextModalAnimations6, modalStep: 1, removeDelay: 0.1, displayDelay: 0.1})
+        displayPrevModal({prevModal: modalsArray[2], nextModal: modalsArray[1], prevModalAnimations: prevModalAnimations7, nextModalAnimations: nextModalAnimations7, modalStep: 1, removeDelay: 0.1, displayDelay: 0.1})
     })
 
     let prevModalAnimations8 = [{type: 'fadeOut', duration: 0.1, delay: 0, class: 'inputs'}]
     let nextModalAnimations8 = [{type: 'fadeInUp', duration: 0.1, class: 'inputs'}]
     modalsArray[4].addButtonEventListner('back', () => {
-        displayPrevModal({prevModal: modalsArray[4], nextModal: modalsArray[2], prevModalAnimations: prevModalAnimations7, nextModalAnimations: nextModalAnimations7, modalStep: 2, removeDelay: 0.1, displayDelay: 0.1})
+        displayPrevModal({prevModal: modalsArray[4], nextModal: modalsArray[2], prevModalAnimations: prevModalAnimations8, nextModalAnimations: nextModalAnimations8, modalStep: 2, removeDelay: 0.1, displayDelay: 0.1})
     })
 
 

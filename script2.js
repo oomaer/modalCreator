@@ -370,7 +370,7 @@ export const createSimpleModalTemplate = ({title, description, background, navig
 
 
 
-export const createSimpleModalTemplate2 = ({title={}, description={}, background, inputs = [], navigationButtons, closeButton, updates = []}) => {
+export const createSimpleModalTemplate2 = ({title={}, description={}, background, inputs = [], imageSource, navigationButtons, closeButton, updates = []}) => {
 
     let modal = new CustomModal(`
         <div class = 'container bg-white w-full max-w-[676px] h-[100vh] md:h-[90vh] md:my-[5vh] p-4 sm:p-16 rounded-[8px] flex flex-col font-["Roboto"] fixed md:right-8 top-0' 
@@ -383,6 +383,9 @@ export const createSimpleModalTemplate2 = ({title={}, description={}, background
                     ${title.html ? `<div class='title font-[500] text-[40px] mb-8 ${title.class}'>${title.html}</div>`: ''}
                     ${description.text ? `<p class='description leading-[24px] mb-8 ${description.class}'>${description.text}</p>`: ''}
                     ${description.html ? `<div class='description leading-[24px] mb-8 ${description.class}'>${description.html}</div>`: ''}
+                </div>
+                <div class='max-w-[275px]'>
+                    <img src = '${imageSource}' class = 'w-[100%] h-[100%]'/>
                 </div>
             </div>
 
