@@ -14,7 +14,7 @@ input name must be SAME in following
 
 
 
-
+const API = 'https://www.taskutark.ee/wp-json/tt/v1/surveyData'
 
 const start = () => {
    
@@ -207,7 +207,7 @@ const start = () => {
     modalsArray[6].addButtonEventListner('next', () => {
         displayNextModal({prevModal: modalsArray[6], nextModal: modalsArray[7], prevModalAnimations:prevModalAnimations6, nextModalAnimations:nextModalAnimations6, modalStep: 7, removeDelay: 0.2, displayDelay: 0.1})
         let body = JSON.parse(localStorage.getItem('model_inputs'))
-        fetch('https://www.taskutark.ee/wp-json/tt/v1/surveyData', {
+        fetch(API, {
             method: "POST",
             body: body
         })
