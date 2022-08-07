@@ -19,7 +19,7 @@ input name must be SAME in following
 const start = () => {
    
     let title, description, inputs, background, navigationButtons, closeButton, updates, imageSource;
-    
+
     title = {text: 'Do you want to perform better at the exam?'}
     description = {text: 'Becoming aware of one´s feelings can lead to better performance in the studies.'}
     background = 'https://i.ibb.co/dk9n8RY/Vectary-texture.png'
@@ -204,7 +204,18 @@ const start = () => {
 
     let prevModalAnimations6 = [{type: 'fadeOut', duration: 0.2, delay: 0, class: 'content'}]
     let nextModalAnimations6 = [{type: 'slideDown', duration: 0.2, delay: 0, class: 'subtitle'}]
-    modalsArray[6].addButtonEventListner('next', () => displayNextModal({prevModal: modalsArray[6], nextModal: modalsArray[7], prevModalAnimations:prevModalAnimations6, nextModalAnimations:nextModalAnimations6, modalStep: 7, removeDelay: 0.2, displayDelay: 0.1}))
+    modalsArray[6].addButtonEventListner('next', () => {
+        displayNextModal({prevModal: modalsArray[6], nextModal: modalsArray[7], prevModalAnimations:prevModalAnimations6, nextModalAnimations:nextModalAnimations6, modalStep: 7, removeDelay: 0.2, displayDelay: 0.1})
+        let body = JSON.parse(localStorage.getItem('model_inputs'))
+        fetch('https://www.taskutark.ee/wp-json/tt/v1/surveyData', {
+            method: "POST",
+            body: body
+        })
+        .then(res => {
+            console.log(res)
+        })
+        .catch(err => console.log(err))
+    })
 
 
     

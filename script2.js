@@ -123,6 +123,11 @@ class CustomModal {
 
     saveInputsToLocalStorage(){
 
+        let model_inputs = JSON.parse(localStorage.getItem("model_inputs"))
+        if(model_inputs === null){
+            model_inputs = {}
+        }
+
         for(let input of this.inputs){
             let value = this.inputValues[input.id]
             if(value === '' || (value.length && value.length === 0)){
@@ -130,8 +135,10 @@ class CustomModal {
                 return false
             }
             localStorage.setItem(input.name, value)
-          
+            //saving into inputs json
+            model_inputs[input.name] = value
         }
+        localStorage.setItem("model_inputs", JSON.stringify(model_inputs))
         return true
     }
 
